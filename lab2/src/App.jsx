@@ -32,7 +32,7 @@ const users = [
 function App() {
   return (
     <div>
-      <h1>User Profiles</h1>
+      <h1 className='main-title'>User Profiles</h1>
       <div className="profile-list">
         {users.map(user => (
           <Profile
