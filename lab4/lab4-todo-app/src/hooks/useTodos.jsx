@@ -34,7 +34,7 @@ const useTodos = () => {
                 todo.id === id ? { ...todo, completed: !todo.completed } : todo
             )
         );
-        setError(null); 
+        setError(null);
 
         const isLocal = id > 10000;
         if (isLocal) return;
