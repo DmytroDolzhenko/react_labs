@@ -1,44 +1,131 @@
-Component Tree
+Component Tree + Data Flow
 
+```
 App
-└── TodoList
-    ├── AddTodoForm
-    └── TodoItem
+│
+└── TodoList  (state: todos, search, currentPage, totalPages, totalTodos, isLoading, error)
+     │
+     ├── TodoSearch
+     │     props: search
+     │     ↑ onSearchChange(value)   (child → parent: update search)
+     │
+     ├── AddTodoForm
+     │     ↑ onAddTodo(text)         (child → parent: send new task)
+     │
+     ├── TodoItem (state: isEditing, editText)
+     │     props: task, onToggle, onDelete, onEdit
+     │
+     │     ├── [Checkbox] toggle → ↑ onToggle(id)       (child → parent: toggle completed)
+     │     ├── [Edit Button] → local state (isEditing = true)
+     │     ├── [Save Button] ↑ onEdit(id, text) (child → parent: edit task)
+     │     └── [Delete Button] ↑ onDelete(id)           (child → parent: request removal)
+     │
+     └── TodoPagination
+           props: currentPage, totalPages, totalTodos
+           ├── [Prev Button] ↑ goToPrevPage()   (child → parent: change page)
+           └── [Next Button] ↑ goToNextPage()   (child → parent: change page)
+```
 
+```
+1. App
 
-Data Flow
+Кореневий компонент застосунку.
 
-TodoList (state: [todos])
-    │
-    ├── onAddTodo(newTask)   add new task to the state
-    ├── onDeleteTodo(id)   delete task from state
-    └── onToggleComplete(id)  change state task status
-          │
-          │ ↓ {onAddTodo}
-          ├── AddTodoForm
-          │     ↑ onAddTodo(text) calls the parent function to add the task
-          │
-          └── [Map: todo from todos]
-                │
-                └── TodoItem (props: {task}, {onDeleteTodo}, {onToggleComplete})
-                      │
-                      │ ↓ task.text, task.isCompleted
-                      ├── [Checkbox]
-                      │     ↑ onChange → onToggleComplete(task.id) informs parent abount change state
-                      └── [Delete Button]
-                            ↑ onClick → onDeleteTodo(task.id) informs parent about delete
+Відповідає лише за рендеринг головного компонента TodoList.
+```
+```
+2. TodoList
 
+Головний контейнер, який керує станом додатку.
 
-1. Кастомний хук useTodos - Джерело стану
-   Хук має стани: todos, isLoading та error
-   Хук надає функції-мутатори (addTodo, deleteTodo, toggleTodo), які інкапсулюють логіку зміни втнутрішнього стану та взаємодії з API
+Використовує кастомний хук useTodos
+для роботи з даними та логікою.
 
-2. Компонент TodoList
-   TodoList використовує стани (todos, isLoading, error) для відображення індикаторів та основного списку
-   Проходить по завданнях todos і передає кожен об'єкт як пропс дочірньому TodoItem
-   Передає функції (addTodo, deleteTodo, toggleTodo) як callback до AddTodoForm та TodoItem
+Передає дані та функції дочірнім компонентам через props.
 
-3. Дочірні компоненти
-   AddTodoForm викликає пропс onAddTodo(text) коли користувач додає нове завдання
-   TodoItem викликає пропс onToggle(id) або onDelete(id) коли користувач натискає на чекбокс або кнопку видалити
-   TodoList отримує цей виклик і передає його далі до функції deleteTodo з хука
+Основні функції:
+
+addTodo(text) — додає нове завдання
+
+toggleTodo(id) — змінює статус виконання
+
+deleteTodo(id) — видаляє завдання
+
+editTodo(id, newTitle) — редагує назву завдання
+
+setSearch(value) — змінює текст пошуку
+
+goToNextPage(), goToPrevPage() — перемикають сторінки
+```
+```
+3. TodoSearch
+
+Компонент поля пошуку.
+
+Отримує через props:
+
+search — поточний текст пошуку;
+
+onSearchChange(value) — функцію для зміни стану пошуку.
+
+Коли користувач вводить текст, викликається onSearchChange, що оновлює стан у TodoList.
+
+Data Flow:
+Input ➝ TodoSearch ➝ onSearchChange(value) ➝ TodoList ➝ setSearch(value)
+```
+```
+4. AddTodoForm
+
+Відповідає за додавання нового завдання.
+
+Має локальний стан text для контролю інпуту.
+
+Після натискання кнопки "Додати" викликає onAddTodo(text), передаючи значення у TodoList.
+
+Data Flow:
+Input ➝ AddTodoForm ➝ onAddTodo(text) ➝ TodoList ➝ addTodo(text)
+```
+```
+5. TodoItem
+
+Відображає окреме завдання.
+
+Має локальні стани:
+
+isEditing — чи активне редагування;
+
+editText — текст при редагуванні.
+
+Отримує через props:
+task, onToggle, onDelete, onEdit.
+
+Data Flow:
+User Action ➝ TodoItem ➝ onToggle/onEdit/onDelete ➝ TodoList ➝ useTodos
+```
+```
+6. TodoPagination
+
+Відповідає за навігацію між сторінками списку.
+
+Отримує через props:
+
+currentPage, totalPages, totalTodos;
+
+goToPrevPage(), goToNextPage() — функції перемикання сторінок.
+
+Кнопки "Попередня" та "Наступна" викликають відповідні функції у TodoList.
+
+Data Flow:
+Button Click ➝ TodoPagination ➝ goToPrevPage/goToNextPage ➝ TodoList ➝ useTodos ➝ fetchTodos()
+```
+```
+Загальна логіка потоку даних
+
+useTodos керує станом (todos, search, pagination).
+
+TodoList передає ці дані в дочірні компоненти через props.
+
+Дочірні компоненти реагують на дії користувача і передають дані вгору через callback-функції.
+
+TodoList оновлює стан через useTodos, що викликає ре-рендер усіх компонентів із новими даними.
+```
