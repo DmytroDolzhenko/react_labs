@@ -1,6 +1,6 @@
+'''
 Component Tree + Data Flow
 
-```
 App
 │
 └── TodoList  (state: todos, search, currentPage, totalPages, totalTodos, isLoading, error)
@@ -24,16 +24,15 @@ App
            props: currentPage, totalPages, totalTodos
            ├── [Prev Button] ↑ goToPrevPage()   (child → parent: change page)
            └── [Next Button] ↑ goToNextPage()   (child → parent: change page)
-```
 
-```
+---
+
 1. App
 
 Кореневий компонент застосунку.
 
 Відповідає лише за рендеринг головного компонента TodoList.
-```
-```
+
 2. TodoList
 
 Головний контейнер, який керує станом додатку.
@@ -56,8 +55,7 @@ editTodo(id, newTitle) — редагує назву завдання
 setSearch(value) — змінює текст пошуку
 
 goToNextPage(), goToPrevPage() — перемикають сторінки
-```
-```
+
 3. TodoSearch
 
 Компонент поля пошуку.
@@ -84,8 +82,7 @@ Input ➝ TodoSearch ➝ onSearchChange(value) ➝ TodoList ➝ setSearch(value)
 
 Data Flow:
 Input ➝ AddTodoForm ➝ onAddTodo(text) ➝ TodoList ➝ addTodo(text)
-```
-```
+
 5. TodoItem
 
 Відображає окреме завдання.
@@ -101,8 +98,7 @@ task, onToggle, onDelete, onEdit.
 
 Data Flow:
 User Action ➝ TodoItem ➝ onToggle/onEdit/onDelete ➝ TodoList ➝ useTodos
-```
-```
+
 6. TodoPagination
 
 Відповідає за навігацію між сторінками списку.
@@ -117,8 +113,7 @@ goToPrevPage(), goToNextPage() — функції перемикання сто�
 
 Data Flow:
 Button Click ➝ TodoPagination ➝ goToPrevPage/goToNextPage ➝ TodoList ➝ useTodos ➝ fetchTodos()
-```
-```
+
 Загальна логіка потоку даних
 
 useTodos керує станом (todos, search, pagination).
