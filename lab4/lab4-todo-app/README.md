@@ -26,7 +26,8 @@ App
            └── [Next Button] ↑ goToNextPage()   (child → parent: change page)
 
 ---
-
+***
+___
 1. App
 
 Кореневий компонент застосунку.
@@ -70,8 +71,7 @@ onSearchChange(value) — функцію для зміни стану пошук
 
 Data Flow:
 Input ➝ TodoSearch ➝ onSearchChange(value) ➝ TodoList ➝ setSearch(value)
-```
-```
+
 4. AddTodoForm
 
 Відповідає за додавання нового завдання.
