@@ -24,9 +24,8 @@ App
            props: currentPage, totalPages, totalTodos
            ├── [Prev Button] ↑ goToPrevPage()   (child → parent: change page)
            └── [Next Button] ↑ goToNextPage()   (child → parent: change page)
-
----
-
+```
+```
 1. App
 
 Кореневий компонент застосунку.
@@ -109,9 +108,8 @@ currentPage, totalPages, totalTodos;
 goToPrevPage(), goToNextPage() — функції перемикання сторінок.
 
 Кнопки "Попередня" та "Наступна" викликають відповідні функції у TodoList.
-
----
-
+```
+```
 Data Flow:
 Button Click ➝ TodoPagination ➝ goToPrevPage/goToNextPage ➝ TodoList ➝ useTodos ➝ fetchTodos()
 
