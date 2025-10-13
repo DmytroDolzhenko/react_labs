@@ -1,4 +1,4 @@
-'''
+```
 Component Tree + Data Flow
 
 App
@@ -26,8 +26,7 @@ App
            └── [Next Button] ↑ goToNextPage()   (child → parent: change page)
 
 ---
-***
-___
+
 1. App
 
 Кореневий компонент застосунку.
@@ -110,6 +109,8 @@ currentPage, totalPages, totalTodos;
 goToPrevPage(), goToNextPage() — функції перемикання сторінок.
 
 Кнопки "Попередня" та "Наступна" викликають відповідні функції у TodoList.
+
+---
 
 Data Flow:
 Button Click ➝ TodoPagination ➝ goToPrevPage/goToNextPage ➝ TodoList ➝ useTodos ➝ fetchTodos()
