@@ -1,7 +1,13 @@
-import { useState, useEffect, useCallback, use } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 
 const API_BASE_URL = 'https://dummyjson.com/todos';
 const DEFAULT_LIMIT = 10;
+
+//custom hook - usetodos
+//container
+//Controlled Components Pattern
+//
+
 
 const useTodos = () => {
     const [todos, setTodos] = useState([]);
@@ -143,21 +149,23 @@ const useTodos = () => {
         }
     }, [todos]);
 
-    const goToNextPage = () => {
-        if(currentPage < totalPages) {
+   const goToNextPage = useCallback(() => {
+        if (currentPage < totalPages) {
             setCurrentPage(prev => prev + 1);
         }
-    };
+    }, [currentPage, totalPages]);
 
-    const goToPrevPage = () => {
-        if(currentPage > 1){
+   const goToPrevPage = useCallback(() => {
+        if (currentPage > 1) {
             setCurrentPage(prev => prev - 1);
         }
-    };
+    }, [currentPage]);
 
-    const filterTodos = todos.filter(todo => 
-        todo.todo.toLowerCase().includes(search.toLowerCase())
-    );
+    const filterTodos = React.useMemo(() => {
+        return todos.filter(todo =>
+            todo.todo.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [todos, search]);
 
     return {
         todos: filterTodos,

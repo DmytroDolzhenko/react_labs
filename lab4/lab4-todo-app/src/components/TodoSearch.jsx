@@ -14,4 +14,4 @@ const TodoSearch = ({search, onSearchChange}) => {
     );
 };
 
-export default TodoSearch;
+export default React.memo(TodoSearch);

@@ -65,4 +65,4 @@ const TodoItem = ({ task, onToggle, onDelete, onEdit }) => {
 };
 
 
-export default TodoItem;
+export default React.memo(TodoItem);

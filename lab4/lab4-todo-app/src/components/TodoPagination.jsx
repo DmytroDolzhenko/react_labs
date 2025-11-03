@@ -32,4 +32,4 @@ const TodoPagination = ({
     );
 };
 
-export default TodoPagination;
+export default React.memo(TodoPagination);
